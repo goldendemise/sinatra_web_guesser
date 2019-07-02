@@ -1,20 +1,21 @@
 require 'sinatra'
 require 'sinatra/reloader'
 
-random_number = rand(100)
+RANDOM_NUMBER = rand(100)
 message = ''
+color = 'blue'
 
 def check_answer(guess)
-  if guess > random_number + 5
+  if guess > RANDOM_NUMBER + 5
     'WAY too high.'
-  elsif guess < random_number - 5
+  elsif guess < RANDOM_NUMBER - 5
     'Way too low'
-  elsif guess > random_number
+  elsif guess > RANDOM_NUMBER
     'Too high.'
-  elsif guess < random_number
+  elsif guess < RANDOM_NUMBER
     'Too low.'
   else
-    "You got it right, the secret number was #{random_number}"
+    "You got it right, the secret number was #{RANDOM_NUMBER}"
   end
 end
 
@@ -22,5 +23,5 @@ get '/' do
   guess = params['guess'].to_i
   message = check_answer(guess)
   # throw params.inspect
-  erb :index, locals: { number: random_number, message: message }
+  erb :index, locals: { number: RANDOM_NUMBER, message: message, color: color }
 end

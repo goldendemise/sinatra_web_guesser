@@ -1,8 +1,14 @@
-<html>
+<!DOCTYPE html>
   <head></head>
+  <style>
+    body {
+      background: <%= color %>;
+    }
+    </style>
   <body>
     <p>
       Your guess was <%= message %>
+      color was <%= color %>
     </p>
     <form>
   <input type='text' name='guess' />
