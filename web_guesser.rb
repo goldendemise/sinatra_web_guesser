@@ -1,10 +1,13 @@
 require 'sinatra'
 require 'sinatra/reloader'
 
-random_number = rand(100)
+@@random_number = rand(100)
 message = ''
+@@guesses = 5
 
 def check_answer(guess, number)
+  @@guesses -= 1 unless guess == number
+  return "You got it right, the secret number was #{number}" if guess == number
   if guess > number  + 5
     'WAY too high.'
   elsif guess < number - 5
@@ -14,7 +17,7 @@ def check_answer(guess, number)
   elsif guess < number
     'Too low.'
   else
-    "You got it right, the secret number was #{number}"
+    'Error'
   end
 end
 
@@ -33,12 +36,16 @@ def set_color(guess, number)
 end
 
 def reset
-  guesses = 5
+  @@guesses = 5
+  @@random_number = rand(100)
 end
+
 get '/' do
   guess = params['guess'].to_i
-  message = check_answer(guess, random_number)
-  color = set_color(guess, random_number)
+  message = check_answer(guess, @@random_number) if @@guesses.positive?
+  message = 'New number generated, guesses reset!' && reset if @@guesses <= 0
+  cheat_message = "The secret number is #{random_number}" if params['cheat']
+  color = set_color(guess, @@random_number)
   # throw params.inspect
-  erb :index, locals: { number: RANDOM_NUMBER, message: message, color: color }
+  erb :index, locals: { guesses: @@guesses, number: @@random_number, message: message, color: color, cheat_message: cheat_message }
 end
